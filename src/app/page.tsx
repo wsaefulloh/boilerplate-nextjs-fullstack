@@ -21,6 +21,9 @@ export default function Home() {
             <Button variant="ghost" className="text-slate-400 hover:text-white hidden sm:inline-flex" asChild>
               <a href="#features">Features</a>
             </Button>
+            <Button variant="ghost" className="text-violet-300 hover:text-white hidden md:inline-flex" asChild>
+              <a href="/users">Users CRUD (Prisma)</a>
+            </Button>
             <Button variant="outline" className="bg-white/5 border-white/10 hover:bg-white/10 text-white" asChild>
               <a href="/demo">Interactive Demo</a>
             </Button>

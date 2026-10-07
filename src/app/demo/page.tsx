@@ -4,10 +4,12 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+import { Layers, Users } from "lucide-react";
 
 import { postSchema, type PostFormValues, type ApiPost } from "@/lib/validations/post.schema";
 import { getPosts, createPost } from "@/lib/api/posts";
 import { usePostStore } from "@/store/usePostStore";
+import UserManagement from "@/components/UserManagement";
 
 // ─── Sub-components ──────────────────────────────────────────────────────────
 
@@ -254,6 +256,7 @@ function CreatedPostsList() {
 // ─── Main Demo Page ───────────────────────────────────────────────────────────
 
 export default function DemoPage() {
+  const [activeTab, setActiveTab] = useState<"users" | "posts">("users");
   const [page, setPage] = useState(1);
 
   // TanStack Query — fetches posts, re-fetches when `page` changes
@@ -296,57 +299,89 @@ export default function DemoPage() {
             <span className="text-slate-600">/</span>
             <span className="text-sm text-slate-400">Demo</span>
           </div>
-          <a
-            href="/"
-            className="text-sm text-slate-400 hover:text-white transition-colors flex items-center gap-1.5"
-          >
-            ← Back to Home
-          </a>
+          <div className="flex items-center gap-4">
+            <a
+              href="/users"
+              className="text-sm text-violet-300 hover:text-white transition-colors"
+            >
+              Users Page →
+            </a>
+            <a
+              href="/"
+              className="text-sm text-slate-400 hover:text-white transition-colors flex items-center gap-1.5"
+            >
+              ← Back to Home
+            </a>
+          </div>
         </div>
       </header>
 
       <main className="relative z-10 pt-24 pb-20 px-6 max-w-7xl mx-auto">
         {/* Page Title */}
-        <div className="mb-12 text-center">
+        <div className="mb-8 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-xs font-semibold mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]" />
-            Interactive Library Demo
+            Fullstack Interactive Showcase
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3">
-            RHF + Zod · Zustand · TanStack Query
+            Next.js + Prisma ORM + TanStack Query
           </h1>
           <p className="text-slate-400 max-w-xl mx-auto text-sm leading-relaxed">
-            A working demo using the public{" "}
-            <a
-              href="https://jsonplaceholder.typicode.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-cyan-400 hover:underline"
-            >
-              JSONPlaceholder API
-            </a>
-            . Click posts to see Zustand state, submit the form to see RHF + Zod validation.
+            Fullstack demonstration featuring live PostgreSQL database CRUD operations with Prisma ORM
+            and client-side state management.
           </p>
         </div>
 
-        {/* Library badges */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
-          {[
-            { label: "React Hook Form", color: "bg-pink-500/10 border-pink-500/30 text-pink-300" },
-            { label: "Zod", color: "bg-blue-500/10 border-blue-500/30 text-blue-300" },
-            { label: "Zustand", color: "bg-amber-500/10 border-amber-500/30 text-amber-300" },
-            { label: "TanStack Query", color: "bg-red-500/10 border-red-500/30 text-red-300" },
-          ].map((b) => (
-            <span
-              key={b.label}
-              className={`px-3 py-1 rounded-full text-xs font-medium border ${b.color}`}
+        {/* Main Tab Navigation */}
+        <div className="flex justify-center mb-10">
+          <div className="inline-flex p-1.5 rounded-2xl bg-white/[0.04] border border-white/10 backdrop-blur-md">
+            <button
+              onClick={() => setActiveTab("users")}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                activeTab === "users"
+                  ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-600/30"
+                  : "text-slate-400 hover:text-white"
+              }`}
             >
-              {b.label}
-            </span>
-          ))}
+              <Users className="w-4 h-4" />
+              Users CRUD (Prisma + PostgreSQL)
+            </button>
+            <button
+              onClick={() => setActiveTab("posts")}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                activeTab === "posts"
+                  ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-600/30"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              <Layers className="w-4 h-4" />
+              Posts Demo (JSONPlaceholder)
+            </button>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {activeTab === "users" ? (
+          <UserManagement />
+        ) : (
+          <div>
+            {/* Library badges */}
+            <div className="flex flex-wrap justify-center gap-3 mb-10">
+              {[
+                { label: "React Hook Form", color: "bg-pink-500/10 border-pink-500/30 text-pink-300" },
+                { label: "Zod", color: "bg-blue-500/10 border-blue-500/30 text-blue-300" },
+                { label: "Zustand", color: "bg-amber-500/10 border-amber-500/30 text-amber-300" },
+                { label: "TanStack Query", color: "bg-red-500/10 border-red-500/30 text-red-300" },
+              ].map((b) => (
+                <span
+                  key={b.label}
+                  className={`px-3 py-1 rounded-full text-xs font-medium border ${b.color}`}
+                >
+                  {b.label}
+                </span>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* ── Left Column: TanStack Query + Zustand ── */}
           <div className="space-y-6">
             {/* TanStack Query Panel */}
@@ -484,6 +519,8 @@ export default function DemoPage() {
             </div>
           </div>
         </div>
+      </div>
+      )}
       </main>
     </div>
   );
